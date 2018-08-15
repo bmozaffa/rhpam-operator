@@ -15,6 +15,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/alecthomas/gobundle"
+  packages = ["."]
+  revision = "e2f55dbde06a5f77289d5de033040a83bc272db3"
+
+[[projects]]
+  branch = "master"
   name = "github.com/beorn7/perks"
   packages = ["quantile"]
   revision = "3a771d992973f24aa725d07868b467d1ddfceafb"
@@ -185,6 +191,17 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/openshift/api"
+  packages = [
+    "apps",
+    "apps/v1",
+    "route",
+    "route/v1"
+  ]
+  revision = "072d1972d82ada59b68aed5e7c6ba93685edeb78"
+
+[[projects]]
+  branch = "master"
   name = "github.com/operator-framework/operator-sdk"
   packages = [
     "pkg/k8sclient",
@@ -206,6 +223,12 @@
   packages = ["."]
   revision = "5f041e8faa004a95c88a202771f4cc3e991971e6"
   version = "v2.0.1"
+
+[[projects]]
+  name = "github.com/pmezard/go-difflib"
+  packages = ["difflib"]
+  revision = "792786c7400a136282c1664665ae0a8db921c6c2"
+  version = "v1.0.0"
 
 [[projects]]
   name = "github.com/prometheus/client_golang"
@@ -254,6 +277,12 @@
   packages = ["."]
   revision = "583c0c0531f06d5278b7d917446061adc344b5cd"
   version = "v1.0.1"
+
+[[projects]]
+  name = "github.com/stretchr/testify"
+  packages = ["assert"]
+  revision = "f35b8ab0b5a2cef36673838d662e249dd9c94686"
+  version = "v1.2.2"
 
 [[projects]]
   branch = "master"
@@ -464,6 +493,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "fb8cd1800f2a5c2acb7cbe08bf82d7c8667b8f6c52666cb33ad0fb0daee5c593"
+  inputs-digest = "764954e5bb7670e1a924096dcd03d7200882f0b301b8f62ba80a4584a7a574a6"
   solver-name = "gps-cdcl"
   solver-version = 1

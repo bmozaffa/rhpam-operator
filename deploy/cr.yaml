@@ -1,4 +1,0 @@
-apiVersion: "rhpam.redhat.com/v1alpha1"
-kind: "App"
-metadata:
-  name: "example"

@@ -1,3 +1,5 @@
+.idea
+vendor/github.com
 
 # Temporary Build Files
 tmp/_output
