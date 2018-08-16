@@ -1,5 +1,5 @@
 {
-  "PROBE_DISABLE_BOOT_ERRORS_CHECK":"true'",
+  "PROBE_DISABLE_BOOT_ERRORS_CHECK":"true",
   "PROBE_IMPL":"probe.eap.jolokia.EapProbe",
   "KIE_MAVEN_USER":"mavenUser"
 }
