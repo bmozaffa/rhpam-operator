@@ -19,14 +19,6 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:ff22c1ee51436bd0f69817599069062f48ff723d2e09355a08a3160f0b10f9f8"
-  name = "github.com/alecthomas/gobundle"
-  packages = ["."]
-  pruneopts = ""
-  revision = "e2f55dbde06a5f77289d5de033040a83bc272db3"
-
-[[projects]]
-  branch = "master"
   digest = "1:c0bec5f9b98d0bc872ff5e834fac186b807b656683bd29cb82fb207a1513fabb"
   name = "github.com/beorn7/perks"
   packages = ["quantile"]
@@ -91,6 +83,14 @@
   pruneopts = ""
   revision = "2b0bd4f193d011c203529df626a65d63cb8a79e8"
   version = "0.15.0"
+
+[[projects]]
+  digest = "1:a2a9202db81e716a847804a58632c9522a4fa13c78e90e7cafce40a4137c7816"
+  name = "github.com/gobuffalo/packr"
+  packages = ["."]
+  pruneopts = ""
+  revision = "ee1318b82b25993be2f7161d48315e1f14697528"
+  version = "v1.13.3"
 
 [[projects]]
   digest = "1:6e73003ecd35f4487a5e88270d3ca0a81bc80dc88053ac7e4dcfec5fba30d918"
@@ -285,6 +285,14 @@
   pruneopts = ""
   revision = "5f041e8faa004a95c88a202771f4cc3e991971e6"
   version = "v2.0.1"
+
+[[projects]]
+  digest = "1:7365acd48986e205ccb8652cc746f09c8b7876030d53710ea6ef7d0bd0dcd7ca"
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  pruneopts = ""
+  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
+  version = "v0.8.0"
 
 [[projects]]
   digest = "1:256484dbbcd271f9ecebc6795b2df8cad4c458dd0f5fd82a8c2fa0c29f233411"
@@ -592,7 +600,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/alecthomas/gobundle",
+    "github.com/gobuffalo/packr",
     "github.com/openshift/api/apps",
     "github.com/openshift/api/apps/v1",
     "github.com/openshift/api/route",
