@@ -15,5 +15,5 @@ PROJECT_NAME="rhpam-operator"
 REPO_PATH="github.com/bmozaffa/rhpam-operator"
 BUILD_PATH="${REPO_PATH}/cmd/${PROJECT_NAME}"
 echo "Building "${PROJECT_NAME}"..."
-go generate $REPO_PATH/config
+go generate $REPO_PATH/internal/pkg/defaults
 GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o ${BIN_DIR}/${PROJECT_NAME} $BUILD_PATH

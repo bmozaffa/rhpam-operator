@@ -1,9 +1,11 @@
 package defaults
 
+//go:generate sh -c "CGO_ENABLED=0 go run .packr/packr.go $PWD"
+
 import (
 	"encoding/json"
 
-	"github.com/bmozaffa/rhpam-operator/config"
+	"github.com/gobuffalo/packr"
 )
 
 func ConsoleEnvironmentDefaults() map[string]string {
@@ -24,7 +26,7 @@ func overrideDefaults(filename string) map[string]string {
 }
 
 func loadJsonMap(filename string) map[string]string {
-	box := config.ConfigPackr()
+	box := packr.NewBox("../../../config/app")
 	jsonMap := make(map[string]string)
 	json.Unmarshal(box.Bytes(filename), &jsonMap)
 	return jsonMap
