@@ -120,6 +120,7 @@ func GetKieServer(cr *v1alpha1.App) []runtime.Object {
 	defaultEnv := defaults.ServerEnvironmentDefaults()
 	defaultEnv["KIE_SERVER_CONTROLLER_SERVICE"] = rhpamcentrServiceName
 	defaultEnv["RHPAMCENTR_MAVEN_REPO_SERVICE"] = rhpamcentrServiceName
+	defaultEnv["EXECUTION_SERVER_ROUTE_NAME"] = serviceName
 	shared.MergeContainerConfigs(dc.Spec.Template.Spec.Containers, cr.Spec.Server, defaultEnv)
 
 	service := &corev1.Service{
@@ -147,7 +148,7 @@ func GetKieServer(cr *v1alpha1.App) []runtime.Object {
 					TargetPort: intstr.FromInt(8080),
 				},
 			},
-			Selector: labels,
+			Selector: map[string]string{"deploymentconfig": serviceName},
 		},
 	}
 

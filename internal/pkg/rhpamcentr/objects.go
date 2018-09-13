@@ -156,7 +156,7 @@ func GetRHMAPCentr(cr *v1alpha1.App) []runtime.Object {
 					TargetPort: intstr.FromInt(8001),
 				},
 			},
-			Selector: labels,
+			Selector: map[string]string{"deploymentconfig": serviceName},
 		},
 	}
 
