@@ -5,16 +5,14 @@ import (
 	"github.com/imdario/mergo"
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/resource"
 )
 
 func GetCommonLabels(app *v1alpha1.App, service string) (string, string, map[string]string) {
 	appName := app.ObjectMeta.Name
 	serviceName := appName + "-" + service
 	labels := map[string]string{
-		"app":        appName,
-		"deployment": serviceName,
-		"service":    serviceName,
+		"app":     appName,
+		"service": serviceName,
 	}
 	return appName, serviceName, labels
 }
@@ -24,14 +22,6 @@ func GetImage(configuredString string, defaultString string) string {
 		return configuredString
 	} else {
 		return defaultString
-	}
-}
-
-func getQuantity(configuredQuantity *resource.Quantity, defaultQuantity string) resource.Quantity {
-	if configuredQuantity.IsZero() {
-		return resource.MustParse(defaultQuantity)
-	} else {
-		return *configuredQuantity
 	}
 }
 
