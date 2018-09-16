@@ -3,31 +3,30 @@ package defaults
 //go:generate sh -c "CGO_ENABLED=0 go run .packr/packr.go $PWD"
 
 import (
-	"encoding/json"
+	"github.com/imdario/mergo"
+	"gopkg.in/yaml.v2"
 
 	"github.com/gobuffalo/packr"
 )
 
 func ConsoleEnvironmentDefaults() map[string]string {
-	return overrideDefaults("console-env.json")
+	return overrideDefaults("console-env.yaml")
 }
 
 func ServerEnvironmentDefaults() map[string]string {
-	return overrideDefaults("server-env.json")
+	return overrideDefaults("server-env.yaml")
 }
 
 func overrideDefaults(filename string) map[string]string {
-	defaults := loadJsonMap("common-env.json")
-	configuration := loadJsonMap(filename)
-	for key, value := range configuration {
-		defaults[key] = value
-	}
+	defaults := loadYamlMap("common-env.yaml")
+	configuration := loadYamlMap(filename)
+	mergo.Map(&defaults, configuration, mergo.WithOverride)
 	return defaults
 }
 
-func loadJsonMap(filename string) map[string]string {
+func loadYamlMap(filename string) map[string]string {
 	box := packr.NewBox("../../../config/app")
-	jsonMap := make(map[string]string)
-	json.Unmarshal(box.Bytes(filename), &jsonMap)
-	return jsonMap
+	yamlMap := make(map[string]string)
+	yaml.Unmarshal(box.Bytes(filename), &yamlMap)
+	return yamlMap
 }
