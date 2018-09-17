@@ -5,6 +5,7 @@ import (
 	"github.com/bmozaffa/rhpam-operator/internal/pkg/defaults"
 	"github.com/bmozaffa/rhpam-operator/internal/pkg/shared"
 	"github.com/bmozaffa/rhpam-operator/pkg/apis/rhpam/v1alpha1"
+	"github.com/imdario/mergo"
 	"github.com/openshift/api/apps/v1"
 	routev1 "github.com/openshift/api/route/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -49,8 +50,8 @@ func GetRHMAPCentr(cr *v1alpha1.App) []runtime.Object {
 			},
 		},
 	}
-	defaultEnv := defaults.ConsoleEnvironmentDefaults()
-	shared.MergeContainerConfigs(dc.Spec.Template.Spec.Containers, cr.Spec.Console, defaultEnv)
+	//defaultEnv := defaults.ConsoleEnvironmentDefaults()
+	//shared.MergeContainerConfigs(dc.Spec.Template.Spec.Containers, cr.Spec.Console, defaultEnv)
 
 	service := &corev1.Service{
 		TypeMeta:   shared.GetServiceTypeMeta(),
@@ -64,4 +65,11 @@ func GetRHMAPCentr(cr *v1alpha1.App) []runtime.Object {
 		Spec:       shared.GetRouteSpec(serviceName),
 	}
 	return []runtime.Object{dc.DeepCopyObject(), service, openshiftRoute.DeepCopyObject()}
+}
+
+func ConstructObjects(object v1alpha1.OpenShiftObject, cr *v1alpha1.App) v1alpha1.OpenShiftObject {
+	defaultObject := defaults.GetConsoleObject()
+	mergo.Merge(&defaultObject, object, mergo.WithOverride)
+	shared.SetReferences(&object, cr)
+	return object
 }

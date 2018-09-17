@@ -3,30 +3,30 @@ package defaults
 //go:generate sh -c "CGO_ENABLED=0 go run .packr/packr.go $PWD"
 
 import (
-	"github.com/imdario/mergo"
-	"gopkg.in/yaml.v2"
-
+	"github.com/bmozaffa/rhpam-operator/pkg/apis/rhpam/v1alpha1"
+	"github.com/ghodss/yaml"
 	"github.com/gobuffalo/packr"
 )
 
-func ConsoleEnvironmentDefaults() map[string]string {
-	return overrideDefaults("console-env.yaml")
+func GetTrialEnvironment() v1alpha1.Environment {
+	env := v1alpha1.Environment{}
+	loadYaml("trial-env.yaml", &env)
+	return env
 }
 
-func ServerEnvironmentDefaults() map[string]string {
-	return overrideDefaults("server-env.yaml")
+func GetConsoleObject() v1alpha1.OpenShiftObject {
+	object := v1alpha1.OpenShiftObject{}
+	loadYaml("console.yaml", &object)
+	return object
 }
 
-func overrideDefaults(filename string) map[string]string {
-	defaults := loadYamlMap("common-env.yaml")
-	configuration := loadYamlMap(filename)
-	mergo.Map(&defaults, configuration, mergo.WithOverride)
-	return defaults
+func GetServerObject() v1alpha1.OpenShiftObject {
+	object := v1alpha1.OpenShiftObject{}
+	loadYaml("server.yaml", &object)
+	return object
 }
 
-func loadYamlMap(filename string) map[string]string {
+func loadYaml(filename string, o interface{}) {
 	box := packr.NewBox("../../../config/app")
-	yamlMap := make(map[string]string)
-	yaml.Unmarshal(box.Bytes(filename), &yamlMap)
-	return yamlMap
+	yaml.Unmarshal(box.Bytes(filename), &o)
 }

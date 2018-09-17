@@ -7,6 +7,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
@@ -38,16 +39,20 @@ func getTypeMeta(kind string, version string) metav1.TypeMeta {
 
 func GetObjectMeta(service string, cr *v1alpha1.App, labels map[string]string) metav1.ObjectMeta {
 	return metav1.ObjectMeta{
-		Name:      service,
-		Namespace: cr.Namespace,
-		OwnerReferences: []metav1.OwnerReference{
-			*metav1.NewControllerRef(cr, schema.GroupVersionKind{
-				Group:   v1alpha1.SchemeGroupVersion.Group,
-				Version: v1alpha1.SchemeGroupVersion.Version,
-				Kind:    "App",
-			}),
-		},
-		Labels: labels,
+		Name:            service,
+		Namespace:       cr.Namespace,
+		OwnerReferences: getOwnerReferences(cr),
+		Labels:          labels,
+	}
+}
+
+func getOwnerReferences(cr *v1alpha1.App) []metav1.OwnerReference {
+	return []metav1.OwnerReference{
+		*metav1.NewControllerRef(cr, schema.GroupVersionKind{
+			Group:   v1alpha1.SchemeGroupVersion.Group,
+			Version: v1alpha1.SchemeGroupVersion.Version,
+			Kind:    "App",
+		}),
 	}
 }
 
@@ -144,5 +149,13 @@ func GetDeploymentTrigger(containerName string, isNamespace string, isName strin
 				},
 			},
 		},
+	}
+}
+
+func SetReferences(object *v1alpha1.OpenShiftObject, cr *v1alpha1.App) {
+	objects := []runtime.Object{&object.DeploymentConfig, &object.Service, &object.Route}
+	for _, common := range objects {
+		common.(metav1.Object).SetNamespace(cr.Namespace)
+		common.(metav1.Object).SetOwnerReferences(getOwnerReferences(cr))
 	}
 }

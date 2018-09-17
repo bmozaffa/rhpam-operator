@@ -5,6 +5,7 @@ import (
 	"github.com/bmozaffa/rhpam-operator/internal/pkg/defaults"
 	"github.com/bmozaffa/rhpam-operator/internal/pkg/shared"
 	"github.com/bmozaffa/rhpam-operator/pkg/apis/rhpam/v1alpha1"
+	"github.com/imdario/mergo"
 	"github.com/openshift/api/apps/v1"
 	routev1 "github.com/openshift/api/route/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -15,10 +16,10 @@ func GetKieServer(cr *v1alpha1.App) []runtime.Object {
 	_, serviceName, labels := shared.GetCommonLabels(cr, constants.KieServerServicePrefix)
 	image := shared.GetImage(cr.Spec.Server.Image, "rhpam70-kieserver-openshift")
 	resourceReqs := map[string]map[corev1.ResourceName]string{"Limits": {corev1.ResourceMemory: "220Mi"}, "Requests": {corev1.ResourceMemory: "220Mi"}}
-	livenessProbeInts := map[string]int{"InitialDelaySeconds": 180, "TimeoutSeconds": 2, "PeriodSeconds": 15}
-	livenessProbeScript := map[string]string{"username": "adminUser", "password": "RedHat", "url": "http://localhost:8080/services/rest/server/healthcheck"}
-	readinessProbeInts := map[string]int{"InitialDelaySeconds": 60, "TimeoutSeconds": 2, "PeriodSeconds": 30, "FailureThreshold": 6}
-	readinessProbeScript := map[string]string{"username": "adminUser", "password": "RedHat", "url": "http://localhost:8080/services/rest/server/readycheck"}
+	livenessProbeInts := map[string]int{"InitialDelaySeconds": 180, "TimeoutSeconds": 2, "PeriodSeconds": 15,}
+	livenessProbeScript := map[string]string{"username": "adminUser", "password": "RedHat", "url": "http://localhost:8080/services/rest/server/healthcheck",}
+	readinessProbeInts := map[string]int{"InitialDelaySeconds": 60, "TimeoutSeconds": 2, "PeriodSeconds": 30, "FailureThreshold": 6,}
+	readinessProbeScript := map[string]string{"username": "adminUser", "password": "RedHat", "url": "http://localhost:8080/services/rest/server/readycheck",}
 
 	dc := v1.DeploymentConfig{
 		TypeMeta:   shared.GetDeploymentTypeMeta(),
@@ -49,12 +50,12 @@ func GetKieServer(cr *v1alpha1.App) []runtime.Object {
 			},
 		},
 	}
-	defaultEnv := defaults.ServerEnvironmentDefaults()
-	rhpamcentrServiceName := cr.ObjectMeta.Name + "-" + constants.RhpamcentrServicePrefix
-	defaultEnv["KIE_SERVER_CONTROLLER_SERVICE"] = rhpamcentrServiceName
-	defaultEnv["RHPAMCENTR_MAVEN_REPO_SERVICE"] = rhpamcentrServiceName
-	defaultEnv["EXECUTION_SERVER_ROUTE_NAME"] = serviceName
-	shared.MergeContainerConfigs(dc.Spec.Template.Spec.Containers, cr.Spec.Server, defaultEnv)
+	//defaultEnv := defaults.ServerEnvironmentDefaults()
+	//rhpamcentrServiceName := cr.ObjectMeta.Name + "-" + constants.RhpamcentrServicePrefix
+	//defaultEnv["KIE_SERVER_CONTROLLER_SERVICE"] = rhpamcentrServiceName
+	//defaultEnv["RHPAMCENTR_MAVEN_REPO_SERVICE"] = rhpamcentrServiceName
+	//defaultEnv["EXECUTION_SERVER_ROUTE_NAME"] = serviceName
+	//shared.MergeContainerConfigs(dc.Spec.Template.Spec.Containers, cr.Spec.Server, defaultEnv)
 
 	service := &corev1.Service{
 		TypeMeta:   shared.GetServiceTypeMeta(),
@@ -68,4 +69,11 @@ func GetKieServer(cr *v1alpha1.App) []runtime.Object {
 		Spec:       shared.GetRouteSpec(serviceName),
 	}
 	return []runtime.Object{dc.DeepCopyObject(), service, openshiftRoute.DeepCopyObject()}
+}
+
+func ConstructObjects(object v1alpha1.OpenShiftObject, cr *v1alpha1.App) v1alpha1.OpenShiftObject {
+	defaultObject := defaults.GetServerObject()
+	mergo.Merge(&defaultObject, object, mergo.WithOverride)
+	shared.SetReferences(&object, cr)
+	return object
 }
